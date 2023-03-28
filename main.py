@@ -16,8 +16,11 @@ def newsfeeder(classe,url):
         df = df.replace('"','',regex=True)
         df = df.replace("'",'',regex=True)
         df = df.replace("“",'',regex=True)
-        squery =f"""INSERT OR IGNORE INTO newws VALUES {','.join([str(i) for i in list(df.to_records(index=False))])}"""
-        engine.execute(squery)
+        try:
+            df.to_sql('news',con=engine, index=False)
+        except:
+            squery =f"""INSERT OR IGNORE INTO news VALUES {','.join([str(i) for i in list(df.to_records(index=False))])}"""
+            engine.execute(squery)
     else:
         pass
 
